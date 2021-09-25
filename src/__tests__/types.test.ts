@@ -17,6 +17,8 @@ test('string validation', () => {
   expect(stringFn.parse(() => {})).toBe(false)
   //@ts-expect-error
   expect(stringFn.parse(undefined)).toBe(false)
+  //@ts-expect-error
+  expect(stringFn.parse(Symbol())).toBe(false)
 })
 
 const numberFn = t.number()
@@ -38,6 +40,8 @@ test('number validation', () => {
   expect(numberFn.parse(() => {})).toBe(false)
   //@ts-expect-error
   expect(numberFn.parse(undefined)).toBe(false)
+  //@ts-expect-error
+  expect(numberFn.parse(Symbol())).toBe(false)
 })
 
 const booleanFn = t.boolean()
@@ -58,6 +62,8 @@ test('boolean validation', () => {
   expect(booleanFn.parse(() => {})).toBe(false)
   //@ts-expect-error
   expect(booleanFn.parse(undefined)).toBe(false)
+  //@ts-expect-error
+  expect(booleanFn.parse(Symbol())).toBe(false)
 })
 
 const bigIntFn = t.bigInt()
@@ -77,6 +83,8 @@ test('bigint validation', () => {
   expect(bigIntFn.parse(() => {})).toBe(false)
   //@ts-expect-error
   expect(bigIntFn.parse(undefined)).toBe(false)
+  //@ts-expect-error
+  expect(bigIntFn.parse(Symbol())).toBe(false)
 })
 
 const fnFn = t.fn()
@@ -96,6 +104,8 @@ test('fn validation', () => {
   expect(fnFn.parse({ test: '' })).toBe(false)
   //@ts-expect-error
   expect(fnFn.parse(undefined)).toBe(false)
+  //@ts-expect-error
+  expect(fnFn.parse(Symbol())).toBe(false)
 })
 
 const undefinedFn = t.undefined()
@@ -114,6 +124,28 @@ test('undefined validation', () => {
   expect(undefinedFn.parse({ test: '' })).toBe(false)
   //@ts-expect-error
   expect(undefinedFn.parse(() => {})).toBe(false)
+  //@ts-expect-error
+  expect(undefinedFn.parse(Symbol())).toBe(false)
+})
+
+const symbolFn = t.symbol()
+test('symbol validation', () => {
+  expect(symbolFn.parse(Symbol())).toBe(true)
+  expect(symbolFn.parse(Symbol('123'))).toBe(true)
+  //@ts-expect-error
+  expect(symbolFn.parse()).toBe(false)
+  //@ts-expect-error
+  expect(symbolFn.parse('123')).toBe(false)
+  //@ts-expect-error
+  expect(symbolFn.parse(true)).toBe(false)
+  //@ts-expect-error
+  expect(symbolFn.parse(5)).toBe(false)
+  //@ts-expect-error
+  expect(symbolFn.parse(BigInt(9007199254740991))).toBe(false)
+  //@ts-expect-error
+  expect(symbolFn.parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(symbolFn.parse(() => {})).toBe(false)
 })
 
 const objFn = t.object({

@@ -46,6 +46,14 @@ export const undefined = (): {
   }
 }
 
+export const symbol = (): {
+  parse: (val: symbol) => boolean
+} => {
+  return {
+    parse: (val) => typeof val === 'symbol',
+  }
+}
+
 export const object = (
   obj: Record<any, any>
 ): {
