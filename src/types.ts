@@ -1,7 +1,3 @@
-interface Parse {
-  parse: (val) => boolean
-}
-
 export const string = (): {
   parse: (val: string) => boolean
 } => {
@@ -34,19 +30,43 @@ export const bigInt = (): {
   }
 }
 
-interface ParseObject {
-  parse: (val) => boolean[]
+export const fn = (): {
+  parse: (val: () => any) => boolean
+} => {
+  return {
+    parse: (val) => typeof val === 'function',
+  }
 }
 
-export const object = (obj: Record<any, any>): ParseObject => {
+export const object = (
+  obj: Record<any, any>
+): {
+  parse: (val) => boolean[]
+} => {
   return {
     parse: (val) => Object.keys(obj).map((k) => obj[k].parse(val[k])),
   }
 }
 
-export const array = (arr: any[]) => {
+export const array = (
+  type: 'string' | 'number' | 'boolean' | 'bigInt' | 'any' | 'empty' = 'any'
+) => {
+  const dic: {
+    any: any[]
+    string: string[]
+    number: number[]
+    boolean: boolean[]
+    bigInt: bigint[]
+  } = {
+    any: [],
+    string: [],
+    number: [],
+    boolean: [],
+    bigInt: [],
+  }
+  const arr = dic[type]
+
   return {
     parse: (val) => arr.map((k) => k.parse()),
   }
 }
-

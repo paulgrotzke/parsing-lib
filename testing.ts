@@ -15,3 +15,10 @@ console.log(
     bigIntKey: BigInt(9007199254740991),
   })
 )
+
+const arrFn = t.array('boolean')
+arrFn.parse([])
+
+const fn = t.fn()
+
+console.log(fn.parse(() => {}))

@@ -1,6 +1,6 @@
-import { string, object, number, boolean, bigInt } from '../types'
+import { t } from '../index'
 
-const stringFn = string()
+const stringFn = t.string()
 test('string validation', () => {
   expect(stringFn.parse('123')).toBe(true)
   //@ts-expect-error
@@ -13,9 +13,11 @@ test('string validation', () => {
   expect(stringFn.parse(9007199254740991n)).toBe(false)
   //@ts-expect-error
   expect(stringFn.parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(stringFn.parse(() => {})).toBe(false)
 })
 
-const numberFn = number()
+const numberFn = t.number()
 test('number validation', () => {
   expect(numberFn.parse(5)).toBe(true)
   expect(numberFn.parse(-5)).toBe(true)
@@ -30,9 +32,11 @@ test('number validation', () => {
   expect(numberFn.parse(9007199254740991n)).toBe(false)
   //@ts-expect-error
   expect(numberFn.parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(numberFn.parse(() => {})).toBe(false)
 })
 
-const booleanFn = boolean()
+const booleanFn = t.boolean()
 test('boolean validation', () => {
   expect(booleanFn.parse(true)).toBe(true)
   expect(booleanFn.parse(false)).toBe(true)
@@ -46,9 +50,11 @@ test('boolean validation', () => {
   expect(booleanFn.parse(9007199254740991n)).toBe(false)
   //@ts-expect-error
   expect(booleanFn.parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(booleanFn.parse(() => {})).toBe(false)
 })
 
-const bigIntFn = bigInt()
+const bigIntFn = t.bigInt()
 test('bigint validation', () => {
   expect(bigIntFn.parse(BigInt(9007199254740991))).toBe(true)
   //@ts-expect-error
@@ -61,13 +67,32 @@ test('bigint validation', () => {
   expect(bigIntFn.parse(5)).toBe(false)
   //@ts-expect-error
   expect(bigIntFn.parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(bigIntFn.parse(() => {})).toBe(false)
 })
 
-const objFn = object({
-  stringKey: string(),
-  numberKey: number(),
-  booleanKey: boolean(),
-  bigIntKey: bigInt(),
+const fnFn = t.fn()
+test('fn validation', () => {
+  expect(fnFn.parse(() => {})).toBe(true)
+  //@ts-expect-error
+  expect(fnFn.parse()).toBe(false)
+  //@ts-expect-error
+  expect(fnFn.parse('123')).toBe(false)
+  //@ts-expect-error
+  expect(fnFn.parse(true)).toBe(false)
+  //@ts-expect-error
+  expect(fnFn.parse(5)).toBe(false)
+  //@ts-expect-error
+  expect(fnFn.parse(BigInt(9007199254740991))).toBe(false)
+  //@ts-expect-error
+  expect(fnFn.parse({ test: '' })).toBe(false)
+})
+
+const objFn = t.object({
+  stringKey: t.string(),
+  numberKey: t.number(),
+  booleanKey: t.boolean(),
+  bigIntKey: t.bigInt(),
 })
 test('object validation', () => {
   expect(
