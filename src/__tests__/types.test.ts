@@ -15,6 +15,8 @@ test('string validation', () => {
   expect(stringFn.parse({ test: '' })).toBe(false)
   //@ts-expect-error
   expect(stringFn.parse(() => {})).toBe(false)
+  //@ts-expect-error
+  expect(stringFn.parse(undefined)).toBe(false)
 })
 
 const numberFn = t.number()
@@ -34,6 +36,8 @@ test('number validation', () => {
   expect(numberFn.parse({ test: '' })).toBe(false)
   //@ts-expect-error
   expect(numberFn.parse(() => {})).toBe(false)
+  //@ts-expect-error
+  expect(numberFn.parse(undefined)).toBe(false)
 })
 
 const booleanFn = t.boolean()
@@ -52,6 +56,8 @@ test('boolean validation', () => {
   expect(booleanFn.parse({ test: '' })).toBe(false)
   //@ts-expect-error
   expect(booleanFn.parse(() => {})).toBe(false)
+  //@ts-expect-error
+  expect(booleanFn.parse(undefined)).toBe(false)
 })
 
 const bigIntFn = t.bigInt()
@@ -69,6 +75,8 @@ test('bigint validation', () => {
   expect(bigIntFn.parse({ test: '' })).toBe(false)
   //@ts-expect-error
   expect(bigIntFn.parse(() => {})).toBe(false)
+  //@ts-expect-error
+  expect(bigIntFn.parse(undefined)).toBe(false)
 })
 
 const fnFn = t.fn()
@@ -86,6 +94,26 @@ test('fn validation', () => {
   expect(fnFn.parse(BigInt(9007199254740991))).toBe(false)
   //@ts-expect-error
   expect(fnFn.parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(fnFn.parse(undefined)).toBe(false)
+})
+
+const undefinedFn = t.undefined()
+test('undefined validation', () => {
+  expect(undefinedFn.parse(undefined)).toBe(true)
+  expect(undefinedFn.parse()).toBe(true)
+  //@ts-expect-error
+  expect(undefinedFn.parse('123')).toBe(false)
+  //@ts-expect-error
+  expect(undefinedFn.parse(true)).toBe(false)
+  //@ts-expect-error
+  expect(undefinedFn.parse(5)).toBe(false)
+  //@ts-expect-error
+  expect(undefinedFn.parse(BigInt(9007199254740991))).toBe(false)
+  //@ts-expect-error
+  expect(undefinedFn.parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(undefinedFn.parse(() => {})).toBe(false)
 })
 
 const objFn = t.object({

@@ -38,6 +38,14 @@ export const fn = (): {
   }
 }
 
+export const undefined = (): {
+  parse: (val?: undefined) => boolean
+} => {
+  return {
+    parse: (val) => typeof val === 'undefined',
+  }
+}
+
 export const object = (
   obj: Record<any, any>
 ): {
