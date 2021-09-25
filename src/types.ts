@@ -1,77 +1,52 @@
-export const string = (literal?: string) => {
-  const parsingString = (value: string) => {
-    console.log(3)
-    console.log(value)
-    literal ? parseLiteral(literal, value) : parse(typeof value, value)
-  }
+interface Parse {
+  parse: (val) => boolean
+}
+
+export const string = (): {
+  parse: (val: string) => boolean
+} => {
   return {
-    parse: parsingString,
+    parse: (val) => typeof val === 'string',
   }
 }
 
-export const number = (literal?: number) => {
-  const parsingNumber = (value: number) => {
-    console.log(4)
-    literal ? parseLiteral(literal, value) : parse(typeof value, value)
-  }
+export const number = (): {
+  parse: (val: number) => boolean
+} => {
   return {
-    parse: parsingNumber,
+    parse: (val) => typeof val === 'number',
   }
 }
 
-export const boolean = (literal?: boolean) => {
-  const parsingBoolean = (value: boolean) => {
-    console.log(5)
-    literal !== undefined ? parseLiteral(literal, value) : parse(typeof value, value)
-  }
+export const boolean = (): {
+  parse: (val: boolean) => boolean
+} => {
   return {
-    parse: parsingBoolean,
+    parse: (val) => typeof val === 'boolean',
   }
 }
 
-export const object = (obj: Record<string, unknown>) => {
-  const parsing = (value) => {
-    console.log(obj)
-    console.log(value)
-    for (let key in obj) {
-      // @ts-ignore
-      obj[key].parse(value[key])
-      console.log('q', typeof value[key], value[key])
-    }
-  }
+export const bigInt = (): {
+  parse: (val: BigInt) => boolean
+} => {
   return {
-    parse: parsing,
+    parse: (val) => typeof val === 'bigint',
   }
 }
 
-export const array = (tuple?: any) => {
-  return
+interface ParseObject {
+  parse: (val) => boolean[]
 }
 
-const parse = (type, value) => {
-  console.log('parse')
-  console.log(type)
-  console.log(value)
-  console.log(type === typeof value)
-  if (type === typeof value) console.log(true)
-  if (type !== typeof value) console.log(false)
-}
-
-const parseLiteral = (type, value) => {
-  console.log('parseLiteral')
-  if (type === value) console.log(true)
-  if (type !== value) console.log(false)
-}
-
-const parseObj = (type, value) => {
-  const dic = {
-    number: () => {},
+export const object = (obj: Record<any, any>): ParseObject => {
+  return {
+    parse: (val) => Object.keys(obj).map((k) => obj[k].parse(val[k])),
   }
-
-  // dic[value]
-
-  const func = () => {}
-
-  console.log(type, typeof type)
-  console.log(value, typeof value)
 }
+
+export const array = (arr: any[]) => {
+  return {
+    parse: (val) => arr.map((k) => k.parse()),
+  }
+}
+

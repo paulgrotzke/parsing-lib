@@ -19,9 +19,10 @@
     "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
     "noImplicitAny": false,
+    "baseUrl": "src"
   },
   "include": [
-    "./src/**/*",
+    "src",
     "./.eslintrc.js"
   ]
 }

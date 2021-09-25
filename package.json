@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon --config nodemon.json testing.ts",
-    "test": "jest"
+    "test": "jest",
+    "test-watch": "jest --watch"
   },
   "author": "Paul Grotzke",
   "license": "ISC",
