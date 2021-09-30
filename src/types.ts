@@ -54,15 +54,29 @@ export const symbol = (): {
   }
 }
 
-export const object = (
-  obj: Record<any, any>
-): {
-  parse: (val) => boolean[]
-} => {
+export const object = (obj: Record<any, any>) => () => {
   return {
-    parse: (val) => Object.keys(obj).map((k) => obj[k].parse(val[k])),
+    parse: (val) => haveObjSameKeys(obj, val),
   }
 }
+
+// check if objects have same keys
+// should be already avoided from typescript typing
+const haveObjSameKeys = (obj, val) =>
+  [obj, val].every(
+    (object) =>
+      new Set([obj, val].reduce((keys, object) => keys.concat(Object.keys(object)), [])).size ===
+      Object.keys(object).length
+  )
+    ? parseObj(obj, val)
+    : false
+
+const parseObj = (obj, val) =>
+  Object.keys(obj).map((k) =>
+    isObject(obj[k]) ? parseObj(obj[k], val[k]) : obj[k]().parse(val[k])
+  )
+
+const isObject = (obj) => obj != null && obj.constructor.name === 'Object'
 
 export const array = (
   type: 'string' | 'number' | 'boolean' | 'bigInt' | 'any' | 'empty' = 'any'
