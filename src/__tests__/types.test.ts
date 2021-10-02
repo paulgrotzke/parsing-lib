@@ -147,28 +147,44 @@ test('symbol validation', () => {
   expect(t.symbol().parse(() => {})).toBe(false)
 })
 
-// const objFn = t.object({
-//   stringKey: t.string(),
-//   numberKey: t.number(),
-//   booleanKey: t.boolean(),
-//   bigIntKey: t.bigInt(),
-// })
-// test('object validation', () => {
-//   expect(
-//     objFn.parse({
-//       stringKey: '',
-//       numberKey: 0,
-//       booleanKey: false,
-//       bigIntKey: BigInt(9007199254740991),
-//     })
-//   ).toStrictEqual([true, true, true, true])
-//   expect(
-//     objFn.parse({
-//       stringKey: '',
-//       numberKey: '',
-//       booleanKey: '',
-//       bigIntKey: '',
-//     })
-//   ).toStrictEqual([true, false, false, false])
-//   expect(objFn.parse({})).toStrictEqual([false, false, false, false])
-// })
+const objFn = t.object({
+  stringKey: t.string,
+  numberKey: t.number,
+  booleanKey: t.boolean,
+  bigIntKey: t.bigInt,
+})
+test('object validation', () => {
+  expect(
+    objFn().parse({
+      stringKey: '',
+      numberKey: 0,
+      booleanKey: false,
+      bigIntKey: BigInt(9007199254740991),
+    })
+  ).toStrictEqual([true, true, true, true])
+  expect(
+    objFn().parse({
+      stringKey: '',
+      numberKey: '',
+      booleanKey: '',
+      bigIntKey: '',
+    })
+  ).toStrictEqual([true, false, false, false])
+  /* 
+    The key of the to be parse object are different to the schema
+    In this case, .parse() should not be trying to even parse the object
+    So its instantly returning false if the keys dont match 
+  */
+  expect(
+    objFn().parse({
+      stringKey: t.string,
+      numberKey: t.number,
+      booleanKey: t.boolean,
+      // TYPO here
+      //@ts-expect-error
+      bigIntKeY: t.bigInt,
+    })
+  ).toStrictEqual(false)
+  //@ts-expect-error
+  expect(objFn().parse({})).toStrictEqual(false)
+})

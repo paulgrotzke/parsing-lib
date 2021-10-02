@@ -62,7 +62,7 @@ export const object =
       intended to be done from the acutal library
       BUT it helps for development and testing 
       AND it shows differences for the decalred PARSING schema and the API-RESPONSE types
-      (if used be user) */
+      (if used so) */
       parse: (val: { [key in T]: any }) => haveObjSameKeys(obj, val),
     }
   }
