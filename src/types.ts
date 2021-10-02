@@ -54,11 +54,18 @@ export const symbol = (): {
   }
 }
 
-export const object = (obj: Record<any, any>) => () => {
-  return {
-    parse: (val) => haveObjSameKeys(obj, val),
+export const object =
+  <T extends keyof K, K extends { [k: string | number | symbol]: () => void }>(obj: K) =>
+  () => {
+    return {
+      /* This type-safety should not be needed for production, bc this validation is
+      intended to be done from the acutal library
+      BUT it helps for development and testing 
+      AND it shows differences for the decalred PARSING schema and the API-RESPONSE types
+      (if used be user) */
+      parse: (val: { [key in T]: any }) => haveObjSameKeys(obj, val),
+    }
   }
-}
 
 // check if objects have same keys
 // should be already avoided from typescript typing
