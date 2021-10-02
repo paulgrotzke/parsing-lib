@@ -58,17 +58,23 @@ export const object =
   <T extends keyof K, K extends { [k: string | number | symbol]: () => void }>(obj: K) =>
   () => {
     return {
-      /* This type-safety should not be needed for production, bc this validation is
-      intended to be done from the acutal library
+      /* 
+      This type-safety should not be needed for production, bc this validation is
+      intended to be done from the actual library
       BUT it helps for development and testing 
       AND it shows differences for the decalred PARSING schema and the API-RESPONSE types
-      (if used so) */
+      (if used so) 
+      */
       parse: (val: { [key in T]: any }) => haveObjSameKeys(obj, val),
     }
   }
 
-// check if objects have same keys
-// should be already avoided from typescript typing
+/* 
+check if objects have same keys
+should be already avoided from typescript validation
+TODO: maybe could be useful to use this functionality as configurable setting
+THINK: turn setting of, if keys should not be strict equal 
+*/
 const haveObjSameKeys = (obj, val) =>
   [obj, val].every(
     (object) =>
@@ -86,24 +92,21 @@ const parseObj = (obj, val) =>
 const isObject = (obj) => obj != null && obj.constructor.name === 'Object'
 
 export const array = (
-  type: 'string' | 'number' | 'boolean' | 'bigInt' | 'any' | 'empty' = 'any'
+  type: 'string' | 'number' | 'boolean' | 'bigInt' | 'empty' | 'any' = 'any'
 ) => {
-  const dic: {
-    any: any[]
-    string: string[]
-    number: number[]
-    boolean: boolean[]
-    bigInt: bigint[]
-  } = {
-    any: [],
-    string: [],
-    number: [],
-    boolean: [],
-    bigInt: [],
+  const dic = {
+    string: (val: string[]) => val.map((i) => string().parse(i)),
+    number: (val: number[]) => val.map((i) => number().parse(i)),
+    boolean: (val: boolean[]) => val.map((i) => boolean().parse(i)),
+    bigInt: (val: bigint[]) => val.map((i) => bigInt().parse(i)),
+    symbol: (val: symbol[]) => val.map((i) => symbol().parse(i)),
+    empty: (val: void[]) => val.length === 0,
+    any: (val: any[]) => Array.isArray(val),
   }
-  const arr = dic[type]
 
   return {
-    parse: (val) => arr.map((k) => k.parse()),
+    parse: (val) => (Array.isArray(val) ? dic[type](val) : false),
   }
 }
+
+export const tuple = () => null
