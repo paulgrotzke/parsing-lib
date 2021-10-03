@@ -232,3 +232,5 @@ test('array validation', () => {
   //@ts-expect-error
   expect(arrayFn('empty').parse()).toBe(false)
 })
+
+// TODO NULL CHECKING!!!

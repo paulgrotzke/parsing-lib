@@ -54,6 +54,8 @@ export const symbol = (): {
   }
 }
 
+// TODO Support NULL 
+
 export const object =
   <T extends keyof K, K extends { [k: string | number | symbol]: () => void }>(obj: K) =>
   () => {
@@ -110,4 +112,29 @@ export const array = (
   }
 }
 
-export const tuple = () => null
+export const tuple = (tuple: any[]) => {
+  const dic = {
+    string: (tupleItem: string, valItem: string) => primitiveCheck(tupleItem, valItem),
+    number: (tupleItem, valItem) => primitiveCheck(tupleItem, valItem),
+    boolean: (tupleItem: boolean, valItem: boolean) => primitiveCheck(tupleItem, valItem),
+    bigint: (tupleItem: bigint, valItem: bigint) => primitiveCheck(tupleItem, valItem),
+    function: (tupleItem: () => any, valItem: () => any) =>
+      tupleItem.toString() === valItem.toString(),
+    symbol: () => true,
+    undefined: () => true,
+    object: (tupleItem, valItem) => null,
+  }
+
+  const primitiveCheck = (tupleItem: Primitive, valItem: Primitive) =>
+    typeof tupleItem === typeof valItem
+
+  const parseTuple = (tuple: any[], val: any[]) =>
+    tuple.map((i) => (typeof tuple[i] === val[i] ? dic[typeof i](tuple[i], val[i]) : false))
+
+  return {
+    parse: (val: any[]) =>
+      Array.isArray(val) && tuple.length === val.length ? parseTuple(tuple, val) : false,
+  }
+}
+
+type Primitive = string | number | boolean | bigint

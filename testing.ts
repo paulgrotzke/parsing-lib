@@ -43,15 +43,12 @@ const test = [
   },
 ]
 
-const test2 = [[], 'string', { bla: null, blabla: 0 }]
+const tupleFn = t.tuple(['hello', 0, { blabla: 0, bla: { bla: 'string' } }])
 
-// const arrayFn = t.array()
-// console.log(arrayFn.parse([3, '', null]))
+console.log(tupleFn.parse(['hello', 0, { blabla: 0, bla: { bla: 'string' } }]))
 
-const arr = t.array('string')
-console.log(arr.parse(['', '', 0]))
+console.log(typeof Symbol(1))
 
-const e = t.array()
-console.log(e.parse([{}]))
-
-const test1: (() => void)[] = []
+const test1 = [() => null, 0]
+const test2 = [() => null, 0]
+console.log(test1[0].toString() === test2[0].toString())
