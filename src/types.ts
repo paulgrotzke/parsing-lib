@@ -54,7 +54,7 @@ export const symbol = (): {
   }
 }
 
-// TODO Support NULL 
+// TODO Support NULL
 
 export const object =
   <T extends keyof K, K extends { [k: string | number | symbol]: () => void }>(obj: K) =>
@@ -67,7 +67,7 @@ export const object =
       AND it shows differences for the decalred PARSING schema and the API-RESPONSE types
       (if used so) 
       */
-      parse: (val: { [key in T]: any }) => haveObjSameKeys(obj, val),
+      parse: (val: { [key in T]: any }) => (obj && val ? haveObjSameKeys(obj, val) : false),
     }
   }
 
