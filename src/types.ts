@@ -108,7 +108,7 @@ export const array = (
   }
 
   return {
-    parse: (val) => (Array.isArray(val) ? dic[type](val) : false),
+    parse: (val: any[]) => (Array.isArray(val) ? dic[type](val) : false),
   }
 }
 

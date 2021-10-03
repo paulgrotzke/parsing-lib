@@ -215,9 +215,17 @@ test('array validation', () => {
   expect(arrayFn().parse([[[], {}]])).toBe(true)
   //@ts-expect-error
   expect(arrayFn().parse()).toBe(false)
+  //@ts-expect-error
+  expect(arrayFn({}).parse({})).toBe(false)
+  //@ts-expect-error
+  expect(arrayFn(null).parse()).toBe(false)
   expect(arrayFn('string').parse([])).toStrictEqual(false)
   expect(arrayFn('string').parse(['abc'])).toStrictEqual([true])
   expect(arrayFn('string').parse(['abc', 'cad', 0])).toStrictEqual([true, true, false])
+  //@ts-expect-error
+  expect(arrayFn('string').parse(null)).toStrictEqual(false)
+  //@ts-expect-error
+  expect(arrayFn('string').parse({})).toStrictEqual(false)
   //@ts-expect-error
   expect(arrayFn('string').parse()).toBe(false)
   expect(arrayFn('number').parse([])).toStrictEqual(false)
@@ -251,5 +259,3 @@ test('array validation', () => {
   //@ts-expect-error
   expect(arrayFn('empty').parse()).toBe(false)
 })
-
-// TODO NULL CHECKING!!!
