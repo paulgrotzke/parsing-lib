@@ -43,10 +43,15 @@ const test = [
   },
 ]
 
-const test2 = [[], 'string']
+const test2 = [[], 'string', { bla: null, blabla: 0 }]
 
 // const arrayFn = t.array()
 // console.log(arrayFn.parse([3, '', null]))
 
 const arr = t.array('string')
 console.log(arr.parse(['', '', 0]))
+
+const e = t.array()
+console.log(e.parse([{}]))
+
+const test1: (() => void)[] = []

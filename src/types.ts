@@ -92,16 +92,17 @@ const parseObj = (obj, val) =>
 const isObject = (obj) => obj != null && obj.constructor.name === 'Object'
 
 export const array = (
-  type: 'string' | 'number' | 'boolean' | 'bigInt' | 'empty' | 'any' = 'any'
+  type: 'string' | 'number' | 'boolean' | 'bigInt' | 'symbol' | 'fn' | 'empty' | 'any' = 'any'
 ) => {
   const dic = {
-    string: (val: string[]) => val.map((i) => string().parse(i)),
-    number: (val: number[]) => val.map((i) => number().parse(i)),
-    boolean: (val: boolean[]) => val.map((i) => boolean().parse(i)),
-    bigInt: (val: bigint[]) => val.map((i) => bigInt().parse(i)),
-    symbol: (val: symbol[]) => val.map((i) => symbol().parse(i)),
+    string: (val: string[]) => (val.length > 0 ? val.map((i) => string().parse(i)) : false),
+    number: (val: number[]) => (val.length > 0 ? val.map((i) => number().parse(i)) : false),
+    boolean: (val: boolean[]) => (val.length > 0 ? val.map((i) => boolean().parse(i)) : false),
+    bigInt: (val: bigint[]) => (val.length > 0 ? val.map((i) => bigInt().parse(i)) : false),
+    symbol: (val: symbol[]) => (val.length > 0 ? val.map((i) => symbol().parse(i)) : false),
+    fn: (val: ((val?: any) => any)[]) => (val.length > 0 ? val.map((i) => fn().parse(i)) : false),
     empty: (val: void[]) => val.length === 0,
-    any: (val: any[]) => Array.isArray(val),
+    any: (val: any[]) => true,
   }
 
   return {
