@@ -10,7 +10,7 @@ test('string validation', () => {
   //@ts-expect-error
   expect(stringFn().parse(true)).toBe(false)
   //@ts-expect-error
-  expect(stringFn().parse(9007199254740991n)).toBe(false)
+  expect(stringFn().parse(1n)).toBe(false)
   //@ts-expect-error
   expect(stringFn().parse({ test: '' })).toBe(false)
   //@ts-expect-error
@@ -35,7 +35,7 @@ test('number validation', () => {
   //@ts-expect-error
   expect(numberFn().parse(true)).toBe(false)
   //@ts-expect-error
-  expect(numberFn().parse(9007199254740991n)).toBe(false)
+  expect(numberFn().parse(1n)).toBe(false)
   //@ts-expect-error
   expect(numberFn().parse({ test: '' })).toBe(false)
   //@ts-expect-error
@@ -59,7 +59,7 @@ test('boolean validation', () => {
   //@ts-expect-error
   expect(booleanFn().parse(5)).toBe(false)
   //@ts-expect-error
-  expect(booleanFn().parse(9007199254740991n)).toBe(false)
+  expect(booleanFn().parse(1n)).toBe(false)
   //@ts-expect-error
   expect(booleanFn().parse({ test: '' })).toBe(false)
   //@ts-expect-error
@@ -74,7 +74,7 @@ test('boolean validation', () => {
 
 const bigIntFn = t.bigInt
 test('bigint validation', () => {
-  expect(bigIntFn().parse(BigInt(9007199254740991))).toBe(true)
+  expect(bigIntFn().parse(BigInt(1))).toBe(true)
   //@ts-expect-error
   expect(bigIntFn().parse()).toBe(false)
   //@ts-expect-error
@@ -107,7 +107,7 @@ test('fn validation', () => {
   //@ts-expect-error
   expect(fnFn().parse(5)).toBe(false)
   //@ts-expect-error
-  expect(fnFn().parse(BigInt(9007199254740991))).toBe(false)
+  expect(fnFn().parse(BigInt(1))).toBe(false)
   //@ts-expect-error
   expect(fnFn().parse({ test: '' })).toBe(false)
   //@ts-expect-error
@@ -129,7 +129,7 @@ test('undefined validation', () => {
   //@ts-expect-error
   expect(undefinedFn().parse(5)).toBe(false)
   //@ts-expect-error
-  expect(undefinedFn().parse(BigInt(9007199254740991))).toBe(false)
+  expect(undefinedFn().parse(BigInt(1))).toBe(false)
   //@ts-expect-error
   expect(undefinedFn().parse({ test: '' })).toBe(false)
   //@ts-expect-error
@@ -153,13 +153,47 @@ test('symbol validation', () => {
   //@ts-expect-error
   expect(symbolFn().parse(5)).toBe(false)
   //@ts-expect-error
-  expect(symbolFn().parse(BigInt(9007199254740991))).toBe(false)
+  expect(symbolFn().parse(BigInt(1))).toBe(false)
   //@ts-expect-error
   expect(symbolFn().parse({ test: '' })).toBe(false)
   //@ts-expect-error
   expect(symbolFn().parse(() => {})).toBe(false)
   //@ts-expect-error
   expect(symbolFn().parse(null)).toBe(false)
+})
+
+const literalFn = t.literal
+test('literal validation', () => {
+  expect(literalFn('').parse('')).toBe(true)
+  //@ts-expect-error
+  expect(literalFn('').parse('123')).toBe(false)
+  //@ts-ignore
+  expect(literalFn('').parse()).toBe(false)
+  //@ts-expect-error
+  expect(literalFn('').parse('123')).toBe(false)
+  //@ts-expect-error
+  expect(literalFn('').parse(true)).toBe(false)
+  //@ts-expect-error
+  expect(literalFn('').parse(5)).toBe(false)
+  //@ts-expect-error
+  expect(literalFn('').parse(BigInt(1))).toBe(false)
+  //@ts-expect-error
+  expect(literalFn('').parse({ test: '' })).toBe(false)
+  //@ts-expect-error
+  expect(literalFn('').parse(() => {})).toBe(false)
+  //@ts-expect-error
+  expect(literalFn('').parse(null)).toBe(false)
+  expect(literalFn(1).parse(1)).toBe(true)
+  //@ts-expect-error
+  expect(literalFn(1).parse(0)).toBe(false)
+  expect(literalFn(true).parse(true)).toBe(true)
+  //@ts-expect-error
+  expect(literalFn(true).parse(false)).toBe(false)
+  expect(literalFn(false).parse(false)).toBe(true)
+  //@ts-expect-error
+  expect(literalFn(false).parse(true)).toBe(false)
+  expect(literalFn(BigInt(1)).parse(BigInt(1))).toBe(true)
+  expect(literalFn(BigInt(1)).parse(BigInt(0))).toBe(false)
 })
 
 const objFn = t.object({
@@ -174,7 +208,7 @@ test('object validation', () => {
       stringKey: '',
       numberKey: 0,
       booleanKey: false,
-      bigIntKey: BigInt(9007199254740991),
+      bigIntKey: BigInt(1),
     })
   ).toStrictEqual([true, true, true, true])
   expect(

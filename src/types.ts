@@ -112,28 +112,41 @@ export const array = (
   }
 }
 
-export const tuple = (tuple: any[]) => {
+// TODO fix typing valItem should extend i
+const isDeepEqual = (i: Primitive, j: Primitive) => i === j
+const isTypeEqual = (i, j) => typeof i === typeof j
+
+export const literal = <T extends K, K extends Primitive>(lit: K) => {
   const dic = {
-    string: (tupleItem: string, valItem: string) => primitiveCheck(tupleItem, valItem),
-    number: (tupleItem, valItem) => primitiveCheck(tupleItem, valItem),
-    boolean: (tupleItem: boolean, valItem: boolean) => primitiveCheck(tupleItem, valItem),
-    bigint: (tupleItem: bigint, valItem: bigint) => primitiveCheck(tupleItem, valItem),
-    function: (tupleItem: () => any, valItem: () => any) =>
-      tupleItem.toString() === valItem.toString(),
+    string: (val: string) => isDeepEqual(lit, val),
+    number: (val: number) => isDeepEqual(lit, val),
+    boolean: (val: boolean) => isDeepEqual(lit, val),
+    bigint: (val: bigint) => isDeepEqual(lit, val),
+  }
+  return {
+    parse: (val: T) => (isTypeEqual(lit, val) ? dic[typeof lit](val) : false),
+  }
+}
+
+export const tuple = (tup: any[]) => {
+  const dic = {
+    string: (tupItem: string, valItem: string) => isDeepEqual(tupItem, valItem),
+    // TODO check number typing
+    number: (tupItem, valItem) => isDeepEqual(tupItem, valItem),
+    boolean: (tupItem: boolean, valItem: boolean) => isDeepEqual(tupItem, valItem),
+    bigint: (tupItem: bigint, valItem: bigint) => isDeepEqual(tupItem, valItem),
+    function: (tupItem: () => any, valItem: () => any) => tupItem.toString() === valItem.toString(),
     symbol: () => true,
     undefined: () => true,
-    object: (tupleItem, valItem) => null,
+    object: (tupItem, valItem) => null,
   }
 
-  const primitiveCheck = (tupleItem: Primitive, valItem: Primitive) =>
-    typeof tupleItem === typeof valItem
-
-  const parseTuple = (tuple: any[], val: any[]) =>
-    tuple.map((i) => (typeof tuple[i] === val[i] ? dic[typeof i](tuple[i], val[i]) : false))
+  const parseTuple = (tup: any[], val: any[]) =>
+    tup.map((i) => (isTypeEqual(tup[i], val[i]) ? dic[typeof i](tup[i], val[i]) : false))
 
   return {
     parse: (val: any[]) =>
-      Array.isArray(val) && tuple.length === val.length ? parseTuple(tuple, val) : false,
+      Array.isArray(val) && tup.length === val.length ? parseTuple(tup, val) : false,
   }
 }
 
