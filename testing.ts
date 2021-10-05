@@ -43,17 +43,9 @@ const test = [
   },
 ]
 
-// const tupleFn = t.tuple(['hello', 0, { blabla: 0, bla: { bla: 'string' } }])
+const tupleFn = t.tuple(['hello', 0, { blabla: 0, bla: { bla: 'string' } }])
 
-// console.log(tupleFn.parse(['hello', 0, { blabla: 0, bla: { bla: 'string' } }]))
+console.log(tupleFn.parse(['hello', 0, { blabla: 0, bla: { bla: 'string' } }]))
 
-// console.log(typeof Symbol(1))
-
-// const test1 = [() => null, 0]
-// const test2 = [() => null, 0]
-// console.log(test1[0].toString() === test2[0].toString())
-
-const literalFn = t.literal
-
-//@ts-expect-error
-console.log(literalFn('123').parse(0))
+const tup = t.tuple([0])
+console.log(tup.parse([1]))

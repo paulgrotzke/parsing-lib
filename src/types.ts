@@ -138,11 +138,14 @@ export const tuple = (tup: any[]) => {
     function: (tupItem: () => any, valItem: () => any) => tupItem.toString() === valItem.toString(),
     symbol: () => true,
     undefined: () => true,
-    object: (tupItem, valItem) => null,
+    // NULL CHECKING TODO
+    object: (tupItem, valItem) => {
+      object(tupItem)().parse(valItem)
+    },
   }
 
   const parseTuple = (tup: any[], val: any[]) =>
-    tup.map((i) => (isTypeEqual(tup[i], val[i]) ? dic[typeof i](tup[i], val[i]) : false))
+    tup.map((item, i) => (isTypeEqual(tup[i], val[i]) ? dic[typeof item](tup[i], val[i]) : false))
 
   return {
     parse: (val: any[]) =>
