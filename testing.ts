@@ -47,5 +47,5 @@ const tupleFn = t.tuple(['hello', 0, { blabla: 0, bla: { bla: 'string' } }])
 
 console.log(tupleFn.parse(['hello', 0, { blabla: 0, bla: { bla: 'string' } }]))
 
-const tup = t.tuple([0])
-console.log(tup.parse([1]))
+// const tup = t.tuple([0])
+// console.log(tup.parse([1]))

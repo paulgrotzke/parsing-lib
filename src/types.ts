@@ -1,3 +1,5 @@
+type Primitive = string | number | boolean | bigint
+
 export const string = (): {
   parse: (val: string) => boolean
 } => {
@@ -87,22 +89,23 @@ const haveObjSameKeys = (obj, val) =>
     : false
 
 const parseObj = (obj, val) =>
-  Object.keys(obj).map((k) =>
+  Object.keys(obj).map((k) => {
     isObject(obj[k]) ? parseObj(obj[k], val[k]) : obj[k]().parse(val[k])
-  )
+  })
 
 const isObject = (obj) => obj != null && obj.constructor.name === 'Object'
 
 export const array = (
   type: 'string' | 'number' | 'boolean' | 'bigInt' | 'symbol' | 'fn' | 'empty' | 'any' = 'any'
 ) => {
+  const lengthCheck = (val: any[]) => val.length > 0
   const dic = {
-    string: (val: string[]) => (val.length > 0 ? val.map((i) => string().parse(i)) : false),
-    number: (val: number[]) => (val.length > 0 ? val.map((i) => number().parse(i)) : false),
-    boolean: (val: boolean[]) => (val.length > 0 ? val.map((i) => boolean().parse(i)) : false),
-    bigInt: (val: bigint[]) => (val.length > 0 ? val.map((i) => bigInt().parse(i)) : false),
-    symbol: (val: symbol[]) => (val.length > 0 ? val.map((i) => symbol().parse(i)) : false),
-    fn: (val: ((val?: any) => any)[]) => (val.length > 0 ? val.map((i) => fn().parse(i)) : false),
+    string: (val: string[]) => (lengthCheck(val) ? val.map((i) => string().parse(i)) : false),
+    number: (val: number[]) => (lengthCheck(val) ? val.map((i) => number().parse(i)) : false),
+    boolean: (val: boolean[]) => (lengthCheck(val) ? val.map((i) => boolean().parse(i)) : false),
+    bigInt: (val: bigint[]) => (lengthCheck(val) ? val.map((i) => bigInt().parse(i)) : false),
+    symbol: (val: symbol[]) => (lengthCheck(val) ? val.map((i) => symbol().parse(i)) : false),
+    fn: (val: ((val?: any) => any)[]) => (lengthCheck(val) ? val.map((i) => fn().parse(i)) : false),
     empty: (val: void[]) => val.length === 0,
     any: (val: any[]) => true,
   }
@@ -139,10 +142,24 @@ export const tuple = (tup: any[]) => {
     symbol: () => true,
     undefined: () => true,
     // NULL CHECKING TODO
-    object: (tupItem, valItem) => {
-      object(tupItem)().parse(valItem)
-    },
+    object: (tupItem, valItem) =>
+      [tupItem, valItem].every(
+        (object) =>
+          new Set([tupItem, valItem].reduce((keys, object) => keys.concat(Object.keys(object)), []))
+            .size === Object.keys(object).length
+      )
+        ? parseTupObj(tupItem, valItem)
+        : false,
   }
+
+  /* 
+  Can not use "normal" object function to parse, because invoking of "normal" object is  
+  be done with functional expression. Tuple declaration is done with concret values
+  */
+  const parseTupObj = (obj, val) =>
+    Object.keys(obj).map((k) =>
+      isObject(obj[k]) ? parseTupObj(obj[k], val[k]) : obj[k] === val[k]
+    )
 
   const parseTuple = (tup: any[], val: any[]) =>
     tup.map((item, i) => (isTypeEqual(tup[i], val[i]) ? dic[typeof item](tup[i], val[i]) : false))
@@ -152,5 +169,3 @@ export const tuple = (tup: any[]) => {
       Array.isArray(val) && tup.length === val.length ? parseTuple(tup, val) : false,
   }
 }
-
-type Primitive = string | number | boolean | bigint
