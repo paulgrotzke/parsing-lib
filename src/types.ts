@@ -89,9 +89,9 @@ const haveObjSameKeys = (obj, val) =>
     : false
 
 const parseObj = (obj, val) =>
-  Object.keys(obj).map((k) => {
+  Object.keys(obj).map((k) =>
     isObject(obj[k]) ? parseObj(obj[k], val[k]) : obj[k]().parse(val[k])
-  })
+  )
 
 const isObject = (obj) => obj != null && obj.constructor.name === 'Object'
 
@@ -131,7 +131,11 @@ export const literal = <T extends K, K extends Primitive>(lit: K) => {
   }
 }
 
-export const tuple = (tup: any[]) => {
+export const tuple = (
+  tup: any[]
+): {
+  parse: (val: any) => boolean[]
+} => {
   const dic = {
     string: (tupItem: string, valItem: string) => isDeepEqual(tupItem, valItem),
     // TODO check number typing
@@ -143,29 +147,48 @@ export const tuple = (tup: any[]) => {
     undefined: () => true,
     // NULL CHECKING TODO
     object: (tupItem, valItem) =>
+      Array.isArray(tupItem)
+        ? objDic['array'](tupItem, valItem)
+        : isObject(tupItem)
+        ? objDic['object'](tupItem, valItem)
+        : objDic['null'](valItem),
+  }
+
+  const objDic = {
+    array: (tupItem: any[], valItem: any[]) =>
+      tupItem.length === valItem.length && tupItem.length === 0
+        ? true
+        : tupItem.length > 0
+        ? parseTuple(tupItem, valItem)
+        : false,
+    null: (valItem) => valItem === null,
+    object: (tupItem, valItem) =>
       [tupItem, valItem].every(
         (object) =>
           new Set([tupItem, valItem].reduce((keys, object) => keys.concat(Object.keys(object)), []))
             .size === Object.keys(object).length
       )
-        ? parseTupObj(tupItem, valItem)
+        ? objDic['parseTupObj'](tupItem, valItem)
         : false,
+    /* 
+      Can not use "normal" object function to parse, because invoking of "normal" object is  
+      be done with functional expression. Tuple declaration is done with concret values
+    */
+    parseTupObj: (obj, val) =>
+      Object.keys(obj).map((k) =>
+        isObject(obj[k]) ? objDic['parseTupObj'](obj[k], val[k]) : obj[k] === val[k]
+      ),
   }
-
-  /* 
-  Can not use "normal" object function to parse, because invoking of "normal" object is  
-  be done with functional expression. Tuple declaration is done with concret values
-  */
-  const parseTupObj = (obj, val) =>
-    Object.keys(obj).map((k) =>
-      isObject(obj[k]) ? parseTupObj(obj[k], val[k]) : obj[k] === val[k]
-    )
 
   const parseTuple = (tup: any[], val: any[]) =>
     tup.map((item, i) => (isTypeEqual(tup[i], val[i]) ? dic[typeof item](tup[i], val[i]) : false))
 
   return {
     parse: (val: any[]) =>
-      Array.isArray(val) && tup.length === val.length ? parseTuple(tup, val) : false,
+      Array.isArray(val) && Array.isArray(tup) && tup.length === val.length && tup.length === 0
+        ? true
+        : tup.length > 0
+        ? parseTuple(tup, val)
+        : false,
   }
 }
