@@ -1,1 +1,1 @@
-export * as t from './typings'
+export * as t from './exportTypes/index'
