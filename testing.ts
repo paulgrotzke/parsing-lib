@@ -1,4 +1,4 @@
-import { t } from './src/index'
+import { t } from './src/lib/index'
 
 // const objFn = t.object({
 //   stringKey: t.string,
@@ -43,15 +43,18 @@ const test = [
   },
 ]
 
-const tupleFn = t.tuple([
-  'hello',
-  0,
-  { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } },
-])
+// const tupleFn = t.tuple([
+//   'hello',
+//   0,
+//   { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } },
+// ])
 
-console.log(
-  tupleFn.parse(['hello', 0, { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } }])
-)
+// console.log(
+//   tupleFn.parse(['hello', 0, { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } }])
+// )
+
+const tupleFn = t.tuple([[{ 1: false }]])
+console.log(tupleFn.parse([[{ 1: false }]]))
 
 // const tup = t.tuple([0])
 // console.log(tup.parse([1]))
