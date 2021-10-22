@@ -1,4 +1,4 @@
-import { t } from '../index'
+import { t } from '../lib/index'
 
 const stringFn = t.string
 test('string validation', () => {

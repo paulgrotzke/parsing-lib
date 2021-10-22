@@ -1,6 +1,3 @@
-import { isTypeEqual, isDeepEqual } from '../../utils/equalityChecks'
-import { Primitive } from './types'
-
 export const object =
   <T extends keyof K, K extends { [k: string | number | symbol]: () => void }>(obj: K) =>
   () => {
@@ -37,15 +34,3 @@ const parseObj = (obj, val) =>
   )
 
 const isObject = (obj) => obj != null && obj.constructor.name === 'Object'
-
-export const literal = <T extends K, K extends Primitive>(lit: K) => {
-  const dic = {
-    string: (val: string) => isDeepEqual(lit, val),
-    number: (val: number) => isDeepEqual(lit, val),
-    boolean: (val: boolean) => isDeepEqual(lit, val),
-    bigint: (val: bigint) => isDeepEqual(lit, val),
-  }
-  return {
-    parse: (val: T) => (isTypeEqual(lit, val) ? dic[typeof lit](val) : false),
-  }
-}
