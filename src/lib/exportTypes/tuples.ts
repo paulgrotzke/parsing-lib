@@ -1,4 +1,4 @@
-import { isTypeEqual, isDeepEqual } from '../../utils/equalityChecks'
+import { isTypeEqual, isDeepEqual } from '../utils/equalityChecks'
 
 const isObject = (obj) => obj != null && obj.constructor.name === 'Object'
 

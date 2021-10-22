@@ -1,4 +1,4 @@
-import { Primitive } from '../lib/exportTypes/types'
+import { Primitive } from '../exportTypes/types'
 
 // TODO fix typing valItem should extend i
 export const isDeepEqual = (i: Primitive, j: Primitive) => i === j
