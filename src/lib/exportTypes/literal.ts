@@ -1,4 +1,4 @@
-import { isTypeEqual, isDeepEqual } from '../utils/equalityChecks'
+import { isTypeEqual, isDeepEqual } from '../utils/checks'
 import { Primitive } from './types'
 
 export const literal = <T extends K, K extends Primitive>(lit: K) => {

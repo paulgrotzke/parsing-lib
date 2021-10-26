@@ -294,18 +294,21 @@ test('array validation', () => {
   expect(arrayFn('empty').parse()).toBe(false)
 })
 
-// const tupleFn = t.tuple
-// test('tupple validation', () => {
-//   expect(tupleFn(['']).parse([''])).toStrictEqual([true])
-//   expect(tupleFn([0]).parse([0])).toStrictEqual([true])
-//   expect(tupleFn([true]).parse([true])).toStrictEqual([true])
-//   expect(tupleFn([false]).parse([false])).toStrictEqual([true])
-//   expect(tupleFn([BigInt(1)]).parse([BigInt(1)])).toStrictEqual([true])
-//   expect(tupleFn([null]).parse([null])).toStrictEqual([true])
-//   expect(tupleFn([[]]).parse([[]])).toStrictEqual([true])
-//   expect(tupleFn([{}]).parse([{}])).toStrictEqual([[]])
-//   expect(
-//     tupleFn(['hello', 0, { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } }])
-//     .parse(['hello', 0, { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } }])
-//   ).toStrictEqual([true, true, [true, [true, true]]])
-// })
+const tupleFn = t.tuple
+test('tupple validation', () => {
+  expect(tupleFn(['']).parse([''])).toStrictEqual([true])
+  expect(tupleFn([0]).parse([0])).toStrictEqual([true])
+  expect(tupleFn([true]).parse([true])).toStrictEqual([true])
+  expect(tupleFn([false]).parse([false])).toStrictEqual([true])
+  expect(tupleFn([BigInt(1)]).parse([BigInt(1)])).toStrictEqual([true])
+  expect(tupleFn([null]).parse([null])).toStrictEqual([true])
+  expect(tupleFn([[]]).parse([[]])).toStrictEqual([[true]])
+  expect(tupleFn([{}]).parse([{}])).toStrictEqual([[]])
+  expect(
+    tupleFn(['hello', 0, { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } }]).parse([
+      'hello',
+      0,
+      { blabla: 0, bla: { bla: 'string', blas: [0, { inner: null }] } },
+    ])
+  ).toStrictEqual([true, true, [true, [true, [true, [true]]]]])
+})
