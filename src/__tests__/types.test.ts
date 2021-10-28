@@ -244,54 +244,62 @@ test('object validation', () => {
 
 const arrayFn = t.array
 test('array validation', () => {
-  expect(arrayFn().parse([])).toBe(true)
-  expect(arrayFn().parse([0, ''])).toBe(true)
-  expect(arrayFn().parse([[[], {}]])).toBe(true)
+  expect(arrayFn().arrayParse([])).toBe(true)
+  expect(arrayFn().arrayParse([0, ''])).toBe(true)
+  expect(arrayFn().arrayParse([[[], {}]])).toBe(true)
   //@ts-expect-error
-  expect(arrayFn().parse()).toBe(false)
+  expect(arrayFn().arrayParse()).toBe(false)
   //@ts-expect-error
-  expect(arrayFn({}).parse({})).toBe(false)
+  expect(arrayFn({}).arrayParse({})).toBe(false)
   //@ts-expect-error
-  expect(arrayFn(null).parse()).toBe(false)
-  expect(arrayFn('string').parse([])).toStrictEqual(false)
-  expect(arrayFn('string').parse(['abc'])).toStrictEqual([true])
-  expect(arrayFn('string').parse(['abc', 'cad', 0])).toStrictEqual([true, true, false])
+  expect(arrayFn(null).arrayParse()).toBe(false)
+  expect(arrayFn('string').arrayParse([])).toStrictEqual(false)
+  expect(arrayFn('string').arrayParse(['abc'])).toStrictEqual([true])
+  expect(arrayFn('string').arrayParse(['abc', 'cad', 0])).toStrictEqual([true, true, false])
   //@ts-expect-error
-  expect(arrayFn('string').parse(null)).toStrictEqual(false)
+  expect(arrayFn('string').arrayParse(null)).toStrictEqual(false)
   //@ts-expect-error
-  expect(arrayFn('string').parse({})).toStrictEqual(false)
+  expect(arrayFn('string').arrayParse({})).toStrictEqual(false)
   //@ts-expect-error
-  expect(arrayFn('string').parse()).toBe(false)
-  expect(arrayFn('number').parse([])).toStrictEqual(false)
-  expect(arrayFn('number').parse([0])).toStrictEqual([true])
-  expect(arrayFn('number').parse([0, 1, 'cad'])).toStrictEqual([true, true, false])
+  expect(arrayFn('string').arrayParse()).toBe(false)
+  expect(arrayFn('number').arrayParse([])).toStrictEqual(false)
+  expect(arrayFn('number').arrayParse([0])).toStrictEqual([true])
+  expect(arrayFn('number').arrayParse([0, 1, 'cad'])).toStrictEqual([true, true, false])
   //@ts-expect-error
-  expect(arrayFn('number').parse()).toBe(false)
-  expect(arrayFn('boolean').parse([])).toStrictEqual(false)
-  expect(arrayFn('boolean').parse([true])).toStrictEqual([true])
-  expect(arrayFn('boolean').parse([false])).toStrictEqual([true])
-  expect(arrayFn('boolean').parse([true, false, 0])).toStrictEqual([true, true, false])
+  expect(arrayFn('number').arrayParse()).toBe(false)
+  expect(arrayFn('boolean').arrayParse([])).toStrictEqual(false)
+  expect(arrayFn('boolean').arrayParse([true])).toStrictEqual([true])
+  expect(arrayFn('boolean').arrayParse([false])).toStrictEqual([true])
+  expect(arrayFn('boolean').arrayParse([true, false, 0])).toStrictEqual([true, true, false])
   //@ts-expect-error
-  expect(arrayFn('boolean').parse()).toBe(false)
-  expect(arrayFn('bigInt').parse([])).toStrictEqual(false)
-  expect(arrayFn('bigInt').parse([BigInt(1)])).toStrictEqual([true])
-  expect(arrayFn('bigInt').parse([BigInt(1), BigInt(1), 'cad'])).toStrictEqual([true, true, false])
+  expect(arrayFn('boolean').arrayParse()).toBe(false)
+  expect(arrayFn('bigInt').arrayParse([])).toStrictEqual(false)
+  expect(arrayFn('bigInt').arrayParse([BigInt(1)])).toStrictEqual([true])
+  expect(arrayFn('bigInt').arrayParse([BigInt(1), BigInt(1), 'cad'])).toStrictEqual([
+    true,
+    true,
+    false,
+  ])
   //@ts-expect-error
-  expect(arrayFn('bigInt').parse()).toBe(false)
-  expect(arrayFn('symbol').parse([])).toStrictEqual(false)
-  expect(arrayFn('symbol').parse([Symbol()])).toStrictEqual([true])
-  expect(arrayFn('symbol').parse([Symbol(), Symbol(), 'cad'])).toStrictEqual([true, true, false])
+  expect(arrayFn('bigInt').arrayParse()).toBe(false)
+  expect(arrayFn('symbol').arrayParse([])).toStrictEqual(false)
+  expect(arrayFn('symbol').arrayParse([Symbol()])).toStrictEqual([true])
+  expect(arrayFn('symbol').arrayParse([Symbol(), Symbol(), 'cad'])).toStrictEqual([
+    true,
+    true,
+    false,
+  ])
   //@ts-expect-error
-  expect(arrayFn('symbol').parse()).toBe(false)
-  expect(arrayFn('fn').parse([])).toStrictEqual(false)
-  expect(arrayFn('fn').parse([() => null])).toStrictEqual([true])
-  expect(arrayFn('fn').parse([() => null, () => 0, 0])).toStrictEqual([true, true, false])
+  expect(arrayFn('symbol').arrayParse()).toBe(false)
+  expect(arrayFn('fn').arrayParse([])).toStrictEqual(false)
+  expect(arrayFn('fn').arrayParse([() => null])).toStrictEqual([true])
+  expect(arrayFn('fn').arrayParse([() => null, () => 0, 0])).toStrictEqual([true, true, false])
   //@ts-expect-error
-  expect(arrayFn('fn').parse()).toBe(false)
-  expect(arrayFn('empty').parse([])).toBe(true)
-  expect(arrayFn('empty').parse([0])).toBe(false)
+  expect(arrayFn('fn').arrayParse()).toBe(false)
+  expect(arrayFn('empty').arrayParse([])).toBe(true)
+  expect(arrayFn('empty').arrayParse([0])).toBe(false)
   //@ts-expect-error
-  expect(arrayFn('empty').parse()).toBe(false)
+  expect(arrayFn('empty').arrayParse()).toBe(false)
 })
 
 const tupleFn = t.tuple

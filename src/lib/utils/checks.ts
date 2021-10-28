@@ -4,7 +4,7 @@ export const isDeepEqual = (i: Primitive, j: Primitive) => i === j
 
 export const isTypeEqual = (i, j) => typeof i === typeof j
 
-export const isObject = (obj) => obj !== null && obj.constructor.name === 'Object'
+export const isObject = (x) => x !== null && x.constructor.name === 'Object'
 
 export const haveObjectsSameKeys = (x, y) =>
   /* 

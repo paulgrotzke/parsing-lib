@@ -1,4 +1,12 @@
-import { t } from './src/lib/index'
+import { t, parse } from './src/lib/index'
 
-const tupleFn = t.tuple([[{ 1: false }]]).parse([[{ 1: false }]])
-console.log(tupleFn)
+const schema = t.array('number')
+
+const fetch = async (): Promise<any> => {
+  const fetchApi = async () => [0, 0]
+  const response = await fetchApi()
+  parse(schema, response)
+  return response
+}
+
+fetch()
