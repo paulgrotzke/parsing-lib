@@ -14,7 +14,7 @@ export const array = (
     any: (val: any[]) => true,
   }
 
-  const greater0 = (val) => (val.len > 0 ? dic[type](val) : false)
+  const greater0 = (val: any[]) => (val.length > 0 ? dic[type](val) : false)
 
   return {
     arrayParse: (val: any[]) => (Array.isArray(val) ? greater0(val) : false),
